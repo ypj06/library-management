@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma 生成的客户端（由 npm install 的 postinstall 自动生成）
+/src/generated/prisma
+
+# sqlite 数据库文件（本地数据，不提交）
+prisma/*.db
+prisma/*.db-journal
+
+# next dev 自动生成的 AI 提示文件
+AGENTS.md
