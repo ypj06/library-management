@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { logoutAction } from "@/app/actions/auth";
 import { getCurrentUser } from "@/lib/auth";
+import { ROLE } from "@/lib/roles";
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +44,14 @@ export default async function RootLayout({
 
               {user ? (
                 <div className="flex items-center gap-3">
+                  {user.role === ROLE.ADMIN ? (
+                    <Link
+                      href="/admin/books"
+                      className="transition-colors hover:text-brand-700"
+                    >
+                      管理
+                    </Link>
+                  ) : null}
                   <span className="hidden text-ink-faint sm:inline">
                     {user.name}
                   </span>
