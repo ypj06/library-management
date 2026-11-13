@@ -1,0 +1,68 @@
+// Prisma schema —— 数据库模型的唯一来源。
+// 修改本文件后执行 `npm run db:migrate`，会生成一条迁移并同步到 SQLite。
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// 用户。管理员（ADMIN）与读者（READER）共用一张表，靠 role 区分。
+/// SQLite 不支持 enum，所以 role 用字符串存储，
+/// 取值范围在 src/lib/roles.ts 里用 TS 常量约束。
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  /// 密码不存明文，存 "盐:scrypt 哈希" 的十六进制串，见 src/lib/password.ts
+  password  String
+  role      String   @default("READER")
+  createdAt DateTime @default(now())
+
+  loans Loan[]
+}
+
+/// 图书。
+/// totalCopies 是馆藏总量；"可借数量"不单独存字段，
+/// 而是实时用 totalCopies 减去未归还的借阅数算出来，
+/// 避免库存字段和借阅记录两份数据不一致。
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  isbn        String?  @unique
+  category    String
+  publisher   String?
+  publishYear Int?
+  summary     String?
+  totalCopies Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  loans Loan[]
+
+  @@index([title])
+  @@index([category])
+}
+
+/// 借阅记录。returnedAt 为空表示"仍在借"，有值表示已归还。
+/// 是否逾期 = returnedAt 为空 且 dueAt 已过当前时间。
+model Loan {
+  id         String    @id @default(cuid())
+  userId     String
+  bookId     String
+  borrowedAt DateTime  @default(now())
+  /// 应还日期，借出时固定为 borrowedAt + 30 天
+  dueAt      DateTime
+  returnedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  /// 查询"我的在借"和"某书的在借数量"时最常用，建复合索引
+  @@index([userId, returnedAt])
+  @@index([bookId, returnedAt])
+}
