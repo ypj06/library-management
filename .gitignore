@@ -53,3 +53,6 @@ AGENTS.md
 
 # playwright 调试产物
 /.playwright-cli/
+
+# 工作区工具数据
+/.workbuddy/
