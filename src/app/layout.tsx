@@ -43,6 +43,15 @@ export default async function RootLayout({
               </Link>
 
               {user ? (
+                <Link
+                  href="/my-loans"
+                  className="transition-colors hover:text-brand-700"
+                >
+                  我的借阅
+                </Link>
+              ) : null}
+
+              {user ? (
                 <div className="flex items-center gap-3">
                   {user.role === ROLE.ADMIN ? (
                     <Link
