@@ -1,10 +1,14 @@
 import Link from "next/link";
 
+import { getCurrentUser } from "@/lib/auth";
+
 /**
- * 首页（M0 版本）：项目落地页。
- * 本阶段只搭好骨架与视觉基调，M1 接入数据库后这里会展示真实馆藏数据。
+ * 首页（M2 版本）：项目落地页。
+ * 本阶段只搭好骨架与视觉基调，M3 接入馆藏数据后这里会换成图书列表。
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const user = await getCurrentUser();
+
   return (
     <div className="space-y-12">
       <section className="grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-center">
@@ -25,9 +29,11 @@ export default function HomePage() {
             <Link href="/" className="btn-primary">
               浏览馆藏
             </Link>
-            <Link href="/" className="btn-ghost">
-              登录账号
-            </Link>
+            {user ? null : (
+              <Link href="/login" className="btn-ghost">
+                登录账号
+              </Link>
+            )}
           </div>
         </div>
 

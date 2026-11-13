@@ -50,3 +50,6 @@ prisma/*.db-journal
 
 # next dev 自动生成的 AI 提示文件
 AGENTS.md
+
+# playwright 调试产物
+/.playwright-cli/
