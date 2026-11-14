@@ -75,7 +75,7 @@ npm run dev
 
 打开 http://localhost:3000 。
 
-> 数据库文件为 `prisma/dev.db`，不纳入版本控制。重置数据：`npm run db:reset && npm run db:seed`。
+> 数据库文件为 `prisma/dev.db`，不纳入版本控制。重置数据回到初始状态：`npm run db:reset`（清库、重建表结构并自动重新写入种子数据）。
 
 ## 目录结构
 
@@ -121,7 +121,7 @@ src/
 | `npm run db:setup` | 首次初始化：应用迁移 + 写入种子数据 |
 | `npm run db:migrate` | 修改 schema 后生成并应用迁移 |
 | `npm run db:seed` | 仅写入种子数据 |
-| `npm run db:reset` | 清空数据库并重建 |
+| `npm run db:reset` | 清空数据库、重建表结构并重新写入种子数据 |
 | `npm run db:studio` | 打开 Prisma Studio 可视化查看数据 |
 
 ## 自测清单
